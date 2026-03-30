@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>云上泰和2.0 · 组织架构管理平台</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Navigation -->
+<nav>
+  <div class="brand">🏢 云上泰和 <span class="sub">AI OS</span><span class="v2">V2.0</span></div>
+  <a href="#" class="tab active" data-tab="tab-overview">公司概览</a>
+  <a href="#" class="tab" data-tab="tab-sansheng">组织架构</a>
+  <a href="#" class="tab" data-tab="tab-skills">Skills管理</a>
+  <a href="#" class="tab" data-tab="tab-logs">操作日志</a>
+  <div class="spacer"></div>
+  <div class="live-indicator"><div class="live-dot"></div><span>实时监控</span></div>
+  <span class="time" id="clock">-</span>
+</nav>
+
+<!-- Ticker -->
+<div class="ticker-wrap">
+  <div class="ticker-inner" id="ticker"></div>
+</div>
+
+<!-- ==================== TAB: 公司概览 ==================== -->
+<div class="tab-content active" id="tab-overview">
+<div class="container">
+
+  <!-- Title -->
+  <div style="margin-bottom:24px;">
+    <h1 style="font-size:26px;font-weight:900;margin-bottom:4px;">🏛️ 云上泰和2.0 · 组织架构管理平台</h1>
+    <p style="color:var(--text2);font-size:13px;">青岛泰和嘉柏能源有限公司 · 数字炼厂AI运营平台 · V2.0 &nbsp;|&nbsp; 10部门 × 1大Agent+3小Agent · 全天候监控</p>
+  </div>
+
+  <!-- KPI Row -->
+  <div id="overview-kpi" class="grid-6 mb-16" style="display:grid;grid-template-columns:repeat(6,1fr);gap:16px;">
+    <!-- Filled by JS -->
+  </div>
+
+  <!-- 部门总览 + 操作日志 -->
+  <div class="grid-2-3 mb-16">
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">🏛️ 部门状态总览</div>
+        <span class="panel-badge">10个部门</span>
+      </div>
+      <div class="grid-5" id="dept-mini-grid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;">
+        <!-- Filled by JS -->
+      </div>
+      <div class="divider"></div>
+      <div class="panel-header">
+        <div class="panel-title">📊 部门详细看板</div>
+        <span style="font-size:11px;color:var(--text3);">点击卡片查看Agent详情</span>
+      </div>
+      <div class="grid-4" id="dept-overview" style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;">
+        <!-- Filled by JS -->
+      </div>
+    </div>
+
+    <!-- 右侧：数据概览 + 最新日志 -->
+    <div style="display:flex;flex-direction:column;gap:20px;">
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">📦 Skills仓库统计</div>
+          <span class="panel-badge info">ClawHub</span>
+        </div>
+        <div id="skills-repo-stats"></div>
+      </div>
+      <div class="panel" style="flex:1;">
+        <div class="panel-header">
+          <div class="panel-title">📜 实时操作日志</div>
+          <span class="panel-badge success">Live</span>
+        </div>
+        <div class="log-panel" id="log-entries">
+          <!-- Filled by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ==================== TAB: 组织架构 ==================== -->
+<div class="tab-content" id="tab-sansheng">
+<div class="container">
+
+  <div style="margin-bottom:24px;">
+    <h1 style="font-size:26px;font-weight:900;margin-bottom:4px;">🏛️ 组织架构总览</h1>
+    <p style="color:var(--text2);font-size:13px;">决策中枢（高管层） → 六部执行 → 一大三小Agent矩阵 · 实时状态监控</p>
+  </div>
+
+  <!-- 组织架构视图 -->
+  <div id="sansheng-view">
+    <!-- Filled by JS -->
+  </div>
+
+  <!-- 详细Agent列表 -->
+  <div class="panel mt-16">
+    <div class="panel-header">
+      <div class="panel-title">🤖 全部门Agent矩阵（10大Agent + 30小Agent）</div>
+      <span class="panel-badge">40个Agent</span>
+    </div>
+    <div class="data-table" style="max-height:400px;overflow-y:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>部门</th>
+            <th>Agent类型</th>
+            <th>名称</th>
+            <th>角色</th>
+            <th>状态</th>
+            <th>Skills</th>
+            <th>绩效</th>
+            <th>今日任务</th>
+          </tr>
+        </thead>
+        <tbody id="agent-matrix-table">
+          <!-- Filled by JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ==================== TAB: Skills管理 ==================== -->
+<div class="tab-content" id="tab-skills">
+<div class="container">
+
+  <div style="margin-bottom:24px;">
+    <h1 style="font-size:26px;font-weight:900;margin-bottom:4px;">📦 Skills管理面板</h1>
+    <p style="color:var(--text2);font-size:13px;">Skills仓库 · 增删改查 · 支持启用/禁用 · 参考ClawHub模式</p>
+  </div>
+
+  <!-- 统计卡片 -->
+  <div class="panel mb-16">
+    <div class="panel-header">
+      <div class="panel-title">📊 Skills仓库概览</div>
+    </div>
+    <div id="skills-stats" style="display:flex;gap:12px;align-items:center;"></div>
+  </div>
+
+  <!-- 筛选 + 操作 -->
+  <div class="panel mb-16">
+    <div class="controls">
+      <input class="form-input" id="sk-search" placeholder="搜索技能名称或描述..." style="max-width:240px;">
+      <select class="form-select" id="sk-filter-dept" style="max-width:160px;">
+        <option value="全部">全部部门</option>
+        <option value="通用">通用</option>
+        <option value="高管层">高管层</option>
+        <option value="财务经营部">财务经营部</option>
+        <option value="国际交易部">国际交易部</option>
+        <option value="国内交易部">国内交易部</option>
+        <option value="交易执行部">交易执行部</option>
+        <option value="汇率经营部">汇率经营部</option>
+        <option value="供应链运营部">供应链运营部</option>
+        <option value="期现交易部">期现交易部</option>
+        <option value="卓越运营部">卓越运营部</option>
+        <option value="经营管理部">经营管理部</option>
+      </select>
+      <select class="form-select" id="sk-filter-cat" style="max-width:140px;">
+        <option value="全部">全部分类</option>
+        <option value="全局">全局</option>
+        <option value="财务">财务</option>
+        <option value="贸易">贸易</option>
+        <option value="交易">交易</option>
+        <option value="汇率">汇率</option>
+        <option value="供应链">供应链</option>
+        <option value="期现">期现</option>
+        <option value="卓越运营">卓越运营</option>
+        <option value="经营管理">经营管理</option>
+        <option value="高管">高管</option>
+      </select>
+      <select class="form-select" id="sk-filter-status" style="max-width:120px;">
+        <option value="全部">全部状态</option>
+        <option value="active">已激活</option>
+        <option value="inactive">未激活</option>
+      </select>
+      <div class="spacer"></div>
+      <button class="btn btn-primary" onclick="window.SkillsApp.openAddModal()">➕ 新增技能</button>
+    </div>
+  </div>
+
+  <!-- Skills表格 -->
+  <div class="panel">
+    <div class="data-table" style="max-height:480px;overflow-y:auto;">
+      <table style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr>
+            <th style="background:var(--surface2);padding:8px 14px;text-align:left;color:var(--text2);font-weight:600;border-bottom:1px solid var(--border);position:sticky;top:0;">技能名称</th>
+            <th style="background:var(--surface2);padding:8px 14px;text-align:left;color:var(--text2);font-weight:600;border-bottom:1px solid var(--border);position:sticky;top:0;">分类</th>
+            <th style="background:var(--surface2);padding:8px 14px;text-align:left;color:var(--text2);font-weight:600;border-bottom:1px solid var(--border);position:sticky;top:0;">所属部门</th>
+            <th style="background:var(--surface2);padding:8px 14px;text-align:left;color:var(--text2);font-weight:600;border-bottom:1px solid var(--border);position:sticky;top:0;">描述</th>
+            <th style="background:var(--surface2);padding:8px 14px;text-align:left;color:var(--text2);font-weight:600;border-bottom:1px solid var(--border);position:sticky;top:0;">类型</th>
+            <th style="background:var(--surface2);padding:8px 14px;text-align:left;color:var(--text2);font-weight:600;border-bottom:1px solid var(--border);position:sticky;top:0;">状态</th>
+            <th style="background:var(--surface2);padding:8px 14px;text-align:left;color:var(--text2);font-weight:600;border-bottom:1px solid var(--border);position:sticky;top:0;">操作</th>
+          </tr>
+        </thead>
+        <tbody id="skills-table">
+          <!-- Filled by JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Skills仓库结构说明 -->
+  <div class="panel mt-16">
+    <div class="panel-header">
+      <div class="panel-title">🗂️ Skills仓库结构（参考ClawHub模式）</div>
+    </div>
+    <div id="skills-repo-grid">
+      <!-- Filled by JS -->
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ==================== TAB: 操作日志 ==================== -->
+<div class="tab-content" id="tab-logs">
+<div class="container">
+
+  <div style="margin-bottom:24px;">
+    <h1 style="font-size:26px;font-weight:900;margin-bottom:4px;">📜 操作日志</h1>
+    <p style="color:var(--text2);font-size:13px;">全系统Agent操作记录 · 实时推送 · 支持筛选</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="panel" style="grid-column:1/-1;">
+      <div class="panel-header">
+        <div class="panel-title">🔴 INFO</div>
+        <div class="panel-badge warn">WARN</div>
+        <div class="panel-badge danger">ERROR</div>
+        <div class="panel-badge success">SUCCESS</div>
+        <span class="spacer"></span>
+        <button class="btn btn-sm btn-outline" onclick="renderOperationLogs()">🔄 刷新</button>
+      </div>
+      <div class="log-panel" id="log-entries-full" style="max-height:600px;">
+        <!-- Filled by JS -->
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ==================== Slide Panel: 部门详情 ==================== -->
+<div class="slide-panel" id="slide-panel">
+  <div class="slide-panel-header">
+    <div class="slide-panel-title">部门详情</div>
+    <button class="modal-close" id="slide-panel-close" style="font-size:24px;background:none;border:none;color:var(--text2);cursor:pointer;">×</button>
+  </div>
+  <div id="slide-panel-content">
+    <!-- Filled by JS -->
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+
+<!-- Agent Matrix Table Filler -->
+<script>
+window.Taihe2API = window.Taihe2API || {};
+const origRender = window.renderAgentMatrixTable;
+// Add agent matrix table render
+window.addEventListener('DOMContentLoaded', () => {
+  window.Taihe2API.getDepartments().then(depts => {
+    const container = document.getElementById('agent-matrix-table');
+    if (!container) return;
+    let rows = '';
+    depts.forEach(d => {
+      const statusLabel = { normal: '正常', busy: '忙碌', error: '异常', idle: '待命' };
+      const statusCls = { normal: 'idle', busy: 'busy', error: 'error', idle: 'idle' };
+      const m = d.agents.master;
+      // Master agent row
+      rows += `<tr>
+        <td><span class="tag tag-${d.id===0?'red':d.id===1?'yellow':d.id===2?'blue':d.id===3?'green':d.id===4?'purple':d.id===5?'cyan':d.id===6?'orange':d.id===7?'pink':'blue'}">${d.icon} ${d.name}</span></td>
+        <td><span class="tag tag-green">大Agent</span></td>
+        <td><b>${m.name}</b></td>
+        <td>${m.role}</td>
+        <td><span class="status-dot ${statusCls[d.status]}"></span> ${statusLabel[d.status]}</td>
+        <td>${m.skillsActive.map(s=>`<span class="skill-tag active">${s}</span>`).join('')}</td>
+        <td style="color:var(--success);font-weight:700;">${m.performance}%</td>
+        <td>${m.tasksDone}/${m.tasksToday}</td>
+      </tr>`;
+      // Sub agents
+      d.agents.sub.forEach(sub => {
+        rows += `<tr style="opacity:0.8;">
+          <td></td>
+          <td><span class="tag tag-blue">小Agent</span></td>
+          <td>${sub.name}</td>
+          <td>${sub.role}</td>
+          <td><span class="status-dot ${statusCls[sub.status]}"></span> ${statusLabel[sub.status]}</td>
+          <td>${sub.skills.slice(0,2).map(s=>`<span class="skill-tag">${s}</span>`).join('')}${sub.skills.length>2?'...':''}</td>
+          <td>-</td>
+          <td>-</td>
+        </tr>`;
+      });
+    });
+    container.innerHTML = rows;
+  });
+
+  // Also populate dept-mini-grid
+  window.Taihe2API.getDepartments().then(depts => {
+    const container = document.getElementById('dept-mini-grid');
+    if (!container) return;
+    container.innerHTML = depts.map(d => {
+      const statusLabel = { normal: '正常', busy: '忙碌', error: '异常', idle: '待命' };
+      const s = d.status;
+      return `<div class="dept-mini status-${s}" title="${d.name}">
+        <div class="dept-mini-icon">${d.icon}</div>
+        <div class="dept-mini-name">${d.name.replace('部','').replace('层','')}</div>
+        <div class="dept-mini-status" style="color:${s==='normal'?'var(--success)':s==='busy'?'var(--warn)':'var(--danger)'};">${statusLabel[s]}</div>
+      </div>`;
+    }).join('');
+  });
+});
+</script>
+
+</body>
+</html>
