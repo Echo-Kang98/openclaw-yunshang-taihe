@@ -1,0 +1,10 @@
+# gongbu Agent 配置
+
+## 基本信息
+
+- **Agent ID**: gongbu
+- **Workspace**: ~/.openclaw/workspaces/yunshang-taihe/
+- **Skills目录**: skills/
+
+## 可调度Agent
+
