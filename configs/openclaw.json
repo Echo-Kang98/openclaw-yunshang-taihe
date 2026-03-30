@@ -1,0 +1,415 @@
+{
+  "meta": {
+    "lastTouchedVersion": "2026.3.24",
+    "lastTouchedAt": "2026-03-30T06:15:33.033Z"
+  },
+  "wizard": {
+    "lastRunAt": "2026-03-26T12:07:15.241Z",
+    "lastRunVersion": "2026.3.24",
+    "lastRunCommand": "onboard",
+    "lastRunMode": "local"
+  },
+  "auth": {
+    "profiles": {
+      "minimax:cn": {
+        "provider": "minimax",
+        "mode": "api_key"
+      }
+    }
+  },
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "minimax": {
+        "baseUrl": "https://api.minimaxi.com/anthropic",
+        "apiKey": "YOUR_KEY_HERE",
+        "api": "anthropic-messages",
+        "authHeader": true,
+        "models": [
+          {
+            "id": "MiniMax-M2.7",
+            "name": "MiniMax M2.7"
+          },
+          {
+            "id": "MiniMax-M2.5",
+            "name": "MiniMax M2.5"
+          },
+          {
+            "id": "MiniMax-M2.1",
+            "name": "MiniMax M2.1"
+          },
+          {
+            "id": "MiniMax-M2.1-lightning",
+            "name": "MiniMax M2.1 Lightning"
+          },
+          {
+            "id": "MiniMax-M2",
+            "name": "MiniMax M2"
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "minimax/MiniMax-M2.7"
+      },
+      "models": {
+        "minimax/MiniMax-M2.7": {
+          "alias": "Minimax"
+        }
+      },
+      "workspace": "/root/.openclaw/workspace",
+      "compaction": {
+        "mode": "safeguard"
+      }
+    },
+    "list": [
+      {
+        "id": "taizi",
+        "name": "taizi",
+        "workspace": "/root/.openclaw/workspace-taizi",
+        "agentDir": "/root/.openclaw/agents/taizi/agent",
+        "model": "minimax/MiniMax-M2.7",
+        "subagents": {
+          "allowAgents": [
+            "zhongshu",
+            "menxia",
+            "shangshu",
+            "hubu",
+            "libu",
+            "bingbu",
+            "xingbu",
+            "gongbu",
+            "zaochao",
+            "libu_hr"
+          ]
+        }
+      },
+      {
+        "id": "zhongshu",
+        "workspace": "/root/.openclaw/workspace-zhongshu",
+        "subagents": {
+          "allowAgents": [
+            "menxia",
+            "shangshu"
+          ]
+        }
+      },
+      {
+        "id": "menxia",
+        "workspace": "/root/.openclaw/workspace-menxia",
+        "subagents": {
+          "allowAgents": [
+            "shangshu",
+            "zhongshu"
+          ]
+        }
+      },
+      {
+        "id": "shangshu",
+        "workspace": "/root/.openclaw/workspace-shangshu",
+        "subagents": {
+          "allowAgents": [
+            "zhongshu",
+            "menxia",
+            "hubu",
+            "libu",
+            "bingbu",
+            "xingbu",
+            "gongbu",
+            "libu_hr"
+          ]
+        }
+      },
+      {
+        "id": "hubu",
+        "workspace": "/root/.openclaw/workspace-hubu",
+        "subagents": {
+          "allowAgents": [
+            "shangshu"
+          ]
+        }
+      },
+      {
+        "id": "libu",
+        "workspace": "/root/.openclaw/workspace-libu",
+        "subagents": {
+          "allowAgents": [
+            "shangshu"
+          ]
+        }
+      },
+      {
+        "id": "bingbu",
+        "workspace": "/root/.openclaw/workspace-bingbu",
+        "subagents": {
+          "allowAgents": [
+            "shangshu"
+          ]
+        }
+      },
+      {
+        "id": "xingbu",
+        "workspace": "/root/.openclaw/workspace-xingbu",
+        "subagents": {
+          "allowAgents": [
+            "shangshu"
+          ]
+        }
+      },
+      {
+        "id": "gongbu",
+        "workspace": "/root/.openclaw/workspace-gongbu",
+        "subagents": {
+          "allowAgents": [
+            "shangshu"
+          ]
+        }
+      },
+      {
+        "id": "libu_hr",
+        "workspace": "/root/.openclaw/workspace-libu_hr",
+        "subagents": {
+          "allowAgents": [
+            "shangshu"
+          ]
+        }
+      },
+      {
+        "id": "zaochao",
+        "workspace": "/root/.openclaw/workspace-zaochao",
+        "subagents": {
+          "allowAgents": []
+        }
+      },
+      {
+        "id": "menxia-review-001",
+        "name": "menxia-review-001",
+        "workspace": "/root/.openclaw/workspace-menxia",
+        "agentDir": "/root/.openclaw/agents/menxia-review-001/agent"
+      },
+      {
+        "id": "shangshu-exec-001",
+        "name": "shangshu-exec-001",
+        "workspace": "/root/.openclaw/workspace-shangshu",
+        "agentDir": "/root/.openclaw/agents/shangshu-exec-001/agent"
+      }
+    ]
+  },
+  "tools": {
+    "profile": "full",
+    "deny": [
+      "browser",
+      "web_search",
+      "web_fetch"
+    ],
+    "sessions": {
+      "visibility": "all"
+    },
+    "agentToAgent": {
+      "enabled": true,
+      "allow": [
+        "taizi",
+        "zhongshu",
+        "menxia",
+        "shangshu",
+        "hubu",
+        "libu",
+        "bingbu",
+        "xingbu",
+        "gongbu",
+        "libu_hr",
+        "zaochao"
+      ]
+    }
+  },
+  "bindings": [
+    {
+      "type": "route",
+      "agentId": "taizi",
+      "match": {
+        "channel": "feishu",
+        "accountId": "default"
+      }
+    }
+  ],
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto",
+    "restart": true,
+    "ownerDisplay": "raw"
+  },
+  "session": {
+    "dmScope": "per-channel-peer"
+  },
+  "channels": {
+    "feishu": {
+      "enabled": true,
+      "appId": "cli_a92563e0e6bb9bc0",
+      "appSecret": "YOUR_KEY_HERE",
+      "connectionMode": "websocket",
+      "domain": "feishu",
+      "groupPolicy": "allowlist",
+      "groupAllowFrom": [
+        "oc_fc456f49a877eb89be5853756ab86c43"
+      ],
+      "dmPolicy": "allowlist",
+      "allowFrom": [
+        "4c7554db",
+        "ou_39a3ce056d7037ca2d41e02966323938"
+      ]
+    },
+    "lightclawbot": {
+      "enabled": true,
+      "apiKeys": "YOUR_KEY_HERE"
+    }
+  },
+  "gateway": {
+    "port": 10039,
+    "mode": "local",
+    "bind": "lan",
+    "controlUi": {
+      "basePath": "/mi16cz",
+      "allowedOrigins": [
+        "http://101.32.165.110:10039"
+      ],
+      "allowInsecureAuth": true,
+      "dangerouslyDisableDeviceAuth": true
+    },
+    "auth": {
+      "mode": "token",
+      "token": "YOUR_KEY_HERE"
+    },
+    "tailscale": {
+      "mode": "off",
+      "resetOnExit": false
+    }
+  },
+  "skills": {
+    "install": {
+      "nodeManager": "npm"
+    },
+    "entries": {
+      "qqbot-media": {
+        "enabled": false
+      },
+      "qqbot-remind": {
+        "enabled": false
+      },
+      "qqbot-channel": {
+        "enabled": false
+      },
+      "wacli": {
+        "enabled": false
+      },
+      "voice-call": {
+        "enabled": false
+      },
+      "xurl": {
+        "enabled": false
+      },
+      "trello": {
+        "enabled": false
+      }
+    }
+  },
+  "plugins": {
+    "entries": {
+      "feishu": {
+        "enabled": true
+      },
+      "openclaw-qqbot": {
+        "enabled": true
+      },
+      "ddingtalk": {
+        "enabled": true
+      },
+      "wecom": {
+        "enabled": true
+      },
+      "adp-openclaw": {
+        "enabled": true
+      },
+      "openclaw-plugin-yuanbao": {
+        "enabled": true
+      },
+      "openclaw-weixin": {
+        "enabled": true
+      },
+      "lightclawbot": {
+        "enabled": true
+      }
+    },
+    "installs": {
+      "openclaw-qqbot": {
+        "source": "npm",
+        "spec": "@tencent-connect/openclaw-qqbot",
+        "installPath": "/root/.openclaw/extensions/openclaw-qqbot",
+        "version": "1.6.5",
+        "resolvedName": "@tencent-connect/openclaw-qqbot",
+        "resolvedVersion": "1.6.5",
+        "resolvedSpec": "@tencent-connect/openclaw-qqbot@1.6.5",
+        "resolvedAt": "2026-03-26T12:08:15.304Z"
+      },
+      "ddingtalk": {
+        "source": "npm",
+        "spec": "@largezhou/ddingtalk",
+        "installPath": "/root/.openclaw/extensions/ddingtalk",
+        "version": "2.0.1",
+        "resolvedName": "@largezhou/ddingtalk",
+        "resolvedVersion": "2.0.1",
+        "resolvedSpec": "@largezhou/ddingtalk@2.0.1",
+        "resolvedAt": "2026-03-26T12:08:41.781Z"
+      },
+      "wecom": {
+        "source": "npm",
+        "spec": "@mocrane/wecom",
+        "installPath": "/root/.openclaw/extensions/wecom",
+        "version": "2026.3.24",
+        "resolvedName": "@mocrane/wecom",
+        "resolvedVersion": "2026.3.24",
+        "resolvedSpec": "@mocrane/wecom@2026.3.24",
+        "resolvedAt": "2026-03-26T12:09:50.883Z"
+      },
+      "adp-openclaw": {
+        "source": "npm",
+        "spec": "adp-openclaw",
+        "installPath": "/root/.openclaw/extensions/adp-openclaw",
+        "version": "0.0.77",
+        "resolvedName": "adp-openclaw",
+        "resolvedVersion": "0.0.77",
+        "resolvedSpec": "adp-openclaw@0.0.77",
+        "resolvedAt": "2026-03-26T12:10:06.026Z"
+      },
+      "openclaw-plugin-yuanbao": {
+        "source": "npm",
+        "spec": "openclaw-plugin-yuanbao",
+        "installPath": "/root/.openclaw/extensions/openclaw-plugin-yuanbao",
+        "version": "2.1.0",
+        "resolvedName": "openclaw-plugin-yuanbao",
+        "resolvedVersion": "2.1.0",
+        "resolvedSpec": "openclaw-plugin-yuanbao@2.1.0",
+        "resolvedAt": "2026-03-26T12:10:57.555Z"
+      },
+      "openclaw-weixin": {
+        "source": "npm",
+        "spec": "@tencent-weixin/openclaw-weixin",
+        "installPath": "/root/.openclaw/extensions/openclaw-weixin",
+        "version": "2.0.1",
+        "resolvedName": "@tencent-weixin/openclaw-weixin",
+        "resolvedVersion": "2.0.1",
+        "resolvedSpec": "@tencent-weixin/openclaw-weixin@2.0.1",
+        "resolvedAt": "2026-03-26T12:11:23.163Z"
+      },
+      "lightclawbot": {
+        "source": "npm",
+        "spec": "lightclawbot",
+        "installPath": "/root/.openclaw/extensions/lightclawbot",
+        "version": "1.1.1",
+        "installedAt": "2026-03-30T04:18:14.000Z"
+      }
+    }
+  }
+}
