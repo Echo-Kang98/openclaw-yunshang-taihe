@@ -1,10 +1,10 @@
-# 太子 Agent 配置
+# 供应链运营部 Agent 配置
 
 ## 基本信息
 
-- **Agent ID**: taizi
-- **名称**: 太子
-- **Workspace**: ~/.openclaw/workspaces/yunshang-taihe/taizi/
+- **Agent ID**: gongying
+- **名称**: 供应链运营部
+- **Workspace**: ~/.openclaw/workspaces/yunshang-taihe/gongying/
 
 ## 职责
 

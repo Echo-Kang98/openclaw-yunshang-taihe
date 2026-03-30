@@ -1,10 +1,10 @@
-# 太子 Agent 配置
+# 汇率经营部 Agent 配置
 
 ## 基本信息
 
-- **Agent ID**: taizi
-- **名称**: 太子
-- **Workspace**: ~/.openclaw/workspaces/yunshang-taihe/taizi/
+- **Agent ID**: huilv
+- **名称**: 汇率经营部
+- **Workspace**: ~/.openclaw/workspaces/yunshang-taihe/huilv/
 
 ## 职责
 

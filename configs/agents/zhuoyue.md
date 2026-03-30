@@ -1,10 +1,10 @@
-# 太子 Agent 配置
+# 卓越运营部 Agent 配置
 
 ## 基本信息
 
-- **Agent ID**: taizi
-- **名称**: 太子
-- **Workspace**: ~/.openclaw/workspaces/yunshang-taihe/taizi/
+- **Agent ID**: zhuoyue
+- **名称**: 卓越运营部
+- **Workspace**: ~/.openclaw/workspaces/yunshang-taihe/zhuoyue/
 
 ## 职责
 

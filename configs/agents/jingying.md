@@ -1,10 +1,10 @@
-# 太子 Agent 配置
+# 经营管理部 Agent 配置
 
 ## 基本信息
 
-- **Agent ID**: taizi
-- **名称**: 太子
-- **Workspace**: ~/.openclaw/workspaces/yunshang-taihe/taizi/
+- **Agent ID**: jingying
+- **名称**: 经营管理部
+- **Workspace**: ~/.openclaw/workspaces/yunshang-taihe/jingying/
 
 ## 职责
 

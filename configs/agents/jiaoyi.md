@@ -1,10 +1,10 @@
-# 太子 Agent 配置
+# 交易执行部 Agent 配置
 
 ## 基本信息
 
-- **Agent ID**: taizi
-- **名称**: 太子
-- **Workspace**: ~/.openclaw/workspaces/yunshang-taihe/taizi/
+- **Agent ID**: jiaoyi
+- **名称**: 交易执行部
+- **Workspace**: ~/.openclaw/workspaces/yunshang-taihe/jiaoyi/
 
 ## 职责
 

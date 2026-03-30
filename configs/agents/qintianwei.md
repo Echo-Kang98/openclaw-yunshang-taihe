@@ -1,10 +1,10 @@
-# 太子 Agent 配置
+# 钦天卫 Agent 配置
 
 ## 基本信息
 
-- **Agent ID**: taizi
-- **名称**: 太子
-- **Workspace**: ~/.openclaw/workspaces/yunshang-taihe/taizi/
+- **Agent ID**: qintianwei
+- **名称**: 钦天卫
+- **Workspace**: ~/.openclaw/workspaces/yunshang-taihe/qintianwei/
 
 ## 职责
 

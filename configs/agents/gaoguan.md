@@ -1,10 +1,10 @@
-# 太子 Agent 配置
+# 高管层 Agent 配置
 
 ## 基本信息
 
-- **Agent ID**: taizi
-- **名称**: 太子
-- **Workspace**: ~/.openclaw/workspaces/yunshang-taihe/taizi/
+- **Agent ID**: gaoguan
+- **名称**: 高管层
+- **Workspace**: ~/.openclaw/workspaces/yunshang-taihe/gaoguan/
 
 ## 职责
 
