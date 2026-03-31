@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🦞 小龙虾养成记 - OpenClaw 从入门到精通</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #e74c3c; --secondary: #c0392b; --accent: #f39c12;
+      --pond: #3498db; --bg: #0a0a0f; --card: #13131a;
+      --text: #ecf0f1; --muted: #7f8c8d; --success: #27ae60;
+      --glow: rgba(231,76,60,0.4);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Noto Sans SC',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; overflow-x:hidden; }
+    .hero { min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:2rem; position:relative; overflow:hidden; }
+    .hero-bg { position:absolute; inset:0; background:radial-gradient(ellipse at 50% 80%,rgba(231,76,60,0.15) 0%,transparent 60%); }
+    .hero-lobster { font-size:8rem; animation:bob 3s ease-in-out infinite; filter:drop-shadow(0 0 30px var(--glow)); position:relative; z-index:1; }
+    @keyframes bob { 0%,100%{transform:translateY(0) rotate(-5deg)} 50%{transform:translateY(-20px) rotate(5deg)} }
+    .hero h1 { font-size:clamp(2rem,6vw,3.5rem); font-weight:900; margin:1.5rem 0 0.5rem; background:linear-gradient(135deg,#fff 0%,#f39c12 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; position:relative; z-index:1; }
+    .hero p { font-size:1.2rem; color:var(--muted); max-width:500px; margin-bottom:2.5rem; position:relative; z-index:1; }
+    .btn-start { background:linear-gradient(135deg,var(--primary),var(--secondary)); color:#fff; border:none; padding:1rem 3rem; font-size:1.2rem; font-weight:700; border-radius:50px; cursor:pointer; transition:all 0.3s; box-shadow:0 4px 20px var(--glow); position:relative; z-index:1; }
+    .btn-start:hover { transform:scale(1.05); box-shadow:0 6px 30px var(--glow); }
+    .progress-bar { position:fixed; top:0; left:0; width:100%; height:4px; background:rgba(255,255,255,0.1); z-index:100; }
+    .progress-fill { height:100%; background:linear-gradient(90deg,var(--primary),var(--accent)); width:0%; transition:width 0.5s ease; }
+    .gates { display:none; padding:2rem; max-width:900px; margin:0 auto; }
+    .gates.active { display:block; }
+    .gate { background:var(--card); border-radius:20px; padding:2rem; margin-bottom:2rem; border:2px solid rgba(255,255,255,0.05); transition:all 0.4s; position:relative; overflow:hidden; }
+    .gate::before { content:''; position:absolute; top:0; left:0; width:4px; height:100%; background:var(--primary); opacity:0; transition:opacity 0.3s; }
+    .gate.active::before { opacity:1; }
+    .gate.active { border-color:rgba(231,76,60,0.3); transform:scale(1.02); box-shadow:0 10px 40px rgba(0,0,0,0.3); }
+    .gate.locked { opacity:0.5; filter:grayscale(0.5); pointer-events:none; }
+    .gate-header { display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem; }
+    .gate-num { width:50px; height:50px; border-radius:50%; background:linear-gradient(135deg,var(--primary),var(--secondary)); display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.2rem; flex-shrink:0; }
+    .gate-title { font-size:1.4rem; font-weight:700; }
+    .gate-subtitle { color:var(--muted); font-size:0.9rem; }
+    .gate-content { display:none; animation:fadeIn 0.5s ease; }
+    .gate.active .gate-content { display:block; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+    .concept-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; margin:1.5rem 0; }
+    .concept-card { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:1.2rem; text-align:center; transition:all 0.3s; cursor:default; }
+    .concept-card:hover { background:rgba(231,76,60,0.1); border-color:rgba(231,76,60,0.3); transform:translateY(-3px); }
+    .concept-icon { font-size:2.5rem; margin-bottom:0.5rem; }
+    .concept-name { font-weight:700; margin-bottom:0.3rem; }
+    .concept-desc { font-size:0.85rem; color:var(--muted); }
+    .code-block { background:#0d0d12; border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:1.2rem; margin:1rem 0; font-family:'Courier New',monospace; font-size:0.9rem; overflow-x:auto; position:relative; }
+    .code-block code { color:#a9dc76; white-space:pre; display:block; }
+    .code-block .comment { color:#6272a4; }
+    .code-block .key { color:#ff79c6; }
+    .code-block .string { color:#f1fa8c; }
+    .code-block .cmd { color:#8be9fd; display:block; margin:0.3rem 0; }
+    .copy-btn { position:absolute; top:0.5rem; right:0.5rem; background:rgba(255,255,255,0.1); border:none; color:var(--muted); padding:0.3rem 0.8rem; border-radius:5px; cursor:pointer; font-size:0.8rem; transition:all 0.2s; }
+    .copy-btn:hover { background:rgba(255,255,255,0.2); color:#fff; }
+    .copy-btn.copied { background:var(--success); color:#fff; }
+    .terminal { background:#0a0a0f; border:1px solid rgba(255,255,255,0.1); border-radius:10px; overflow:hidden; margin:1rem 0; }
+    .terminal-bar { background:rgba(255,255,255,0.05); padding:0.5rem 1rem; display:flex; gap:0.5rem; align-items:center; }
+    .term-dot { width:12px; height:12px; border-radius:50%; }
+    .dot-red{background:#ff5f56} .dot-yellow{background:#ffbd2e} .dot-green{background:#27ca40}
+    .term-body { padding:1rem; font-family:'Courier New',monospace; font-size:0.9rem; min-height:120px; }
+    .term-line { margin:0.3rem 0; opacity:0; animation:termShow 0.3s forwards; }
+    @keyframes termShow { to{opacity:1} }
+    .term-prompt { color:#27ae60; }
+    .term-output { color:#ccc; padding-left:1rem; }
+    .pond-container { position:relative; width:100%; max-width:400px; margin:1.5rem auto; aspect-ratio:4/3; }
+    .pond { width:100%; height:100%; background:linear-gradient(180deg,#3498db 0%,#2980b9 100%); border-radius:20px; position:relative; overflow:hidden; border:3px solid #1a5276; }
+    .pond::before { content:''; position:absolute; top:10%; left:10%; width:80%; height:40%; background:rgba(255,255,255,0.1); border-radius:50%; filter:blur(20px); }
+    .wave { position:absolute; bottom:0; left:0; width:200%; height:30px; background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120'%3E%3Cpath fill='rgba(255,255,255,0.1)' d='M0,60 C300,100 600,20 900,60 C1200,100 1200,60 1200,60 L1200,120 L0,120 Z'/%3E%3C/svg%3E") repeat-x; animation:wave 8s linear infinite; }
+    @keyframes wave { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+    .lobster-in-pond { position:absolute; font-size:3rem; bottom:30%; left:50%; transform:translateX(-50%); animation:lobsterBob 2s ease-in-out infinite; filter:drop-shadow(0 5px 10px rgba(0,0,0,0.3)); }
+    @keyframes lobsterBob { 0%,100%{transform:translateX(-50%) translateY(0) rotate(-3deg)} 50%{transform:translateX(-50%) translateY(-10px) rotate(3deg)} }
+    .food-particle { position:absolute; width:8px; height:8px; background:#f39c12; border-radius:50%; top:-20px; animation:foodDrop 1.5s ease-in forwards; opacity:0; }
+    @keyframes foodDrop { 0%{top:-20px;opacity:1} 80%{opacity:1} 100%{top:70%;opacity:0} }
+    .compare-table { width:100%; border-collapse:collapse; margin:1rem 0; }
+    .compare-table th,.compare-table td { padding:0.8rem 1rem; text-align:left; border-bottom:1px solid rgba(255,255,255,0.05); }
+    .compare-table th { color:var(--accent); font-weight:600; }
+    .compare-table tr:hover td { background:rgba(255,255,255,0.02); }
+    .gate-nav { display:flex; justify-content:space-between; margin-top:2rem; padding-top:1.5rem; border-top:1px solid rgba(255,255,255,0.05); }
+    .btn-nav { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:var(--text); padding:0.8rem 1.5rem; border-radius:10px; cursor:pointer; font-weight:600; transition:all 0.3s; display:flex; align-items:center; gap:0.5rem; }
+    .btn-nav:hover:not(:disabled) { background:rgba(255,255,255,0.1); transform:translateY(-2px); }
+    .btn-nav:disabled { opacity:0.3; cursor:not-allowed; }
+    .btn-complete { background:linear-gradient(135deg,var(--success),#1e8449); border:none; color:#fff; padding:0.8rem 1.5rem; border-radius:10px; cursor:pointer; font-weight:600; transition:all 0.3s; }
+    .btn-complete:hover { transform:scale(1.05); box-shadow:0 4px 15px rgba(39,174,96,0.4); }
+    .skill-install { display:flex; flex-direction:column; gap:0.8rem; margin:1rem 0; }
+    .skill-item { display:flex; align-items:center; gap:1rem; background:rgba(255,255,255,0.03); padding:0.8rem 1rem; border-radius:10px; border:1px solid rgba(255,255,255,0.05); }
+    .skill-item-icon { font-size:1.5rem; }
+    .skill-item-info { flex:1; }
+    .skill-item-name { font-weight:600; }
+    .skill-item-status { font-size:0.8rem; color:var(--muted); }
+    .skill-progress { width:100%; height:4px; background:rgba(255,255,255,0.1); border-radius:2px; margin-top:0.3rem; overflow:hidden; }
+    .skill-progress-bar { height:100%; background:var(--success); width:0%; transition:width 1s ease; }
+    .flow-diagram { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:0.5rem; margin:1.5rem 0; padding:1.5rem; background:rgba(255,255,255,0.02); border-radius:15px; }
+    .flow-node { background:var(--card); border:2px solid rgba(255,255,255,0.1); border-radius:12px; padding:0.8rem 1.2rem; text-align:center; min-width:100px; }
+    .flow-node-icon { font-size:1.5rem; }
+    .flow-node-label { font-size:0.8rem; margin-top:0.3rem; color:var(--muted); }
+    .flow-arrow { color:var(--accent); font-size:1.5rem; }
+    .multi-ponds { display:flex; justify-content:center; gap:2rem; flex-wrap:wrap; margin:1.5rem 0; }
+    .mini-pond { width:150px; height:120px; background:linear-gradient(180deg,#3498db 0%,#1a5276 100%); border-radius:15px; border:2px solid #1a5276; display:flex; align-items:center; justify-content:center; font-size:2.5rem; animation:pondFloat 3s ease-in-out infinite; }
+    .mini-pond:nth-child(2){animation-delay:0.5s} .mini-pond:nth-child(3){animation-delay:1s}
+    @keyframes pondFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+    .certificate { background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%); border:3px solid var(--accent); border-radius:20px; padding:3rem 2rem; text-align:center; max-width:500px; margin:2rem auto; position:relative; }
+    .certificate::before { content:'🦞'; font-size:4rem; position:absolute; top:-2rem; left:50%; transform:translateX(-50%); }
+    .certificate h2 { color:var(--accent); font-size:1.5rem; margin-bottom:1rem; }
+    .certificate-name { font-size:2rem; font-weight:900; background:linear-gradient(135deg,#f39c12,#e74c3c); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin:1rem 0; }
+    .certificate p { color:var(--muted); margin-bottom:0.5rem; }
+    .celebration { position:fixed; inset:0; pointer-events:none; z-index:1000; display:none; }
+    .confetti { position:absolute; width:10px; height:10px; border-radius:2px; animation:confettiFall 3s ease-out forwards; }
+    @keyframes confettiFall { 0%{transform:translateY(-100vh) rotate(0deg);opacity:1} 100%{transform:translateY(100vh) rotate(720deg);opacity:0} }
+    .toast { position:fixed; bottom:2rem; left:50%; transform:translateX(-50%) translateY(100px); background:var(--success); color:#fff; padding:1rem 2rem; border-radius:10px; font-weight:600; z-index:200; transition:transform 0.3s ease; display:flex; align-items:center; gap:0.5rem; }
+    .toast.show { transform:translateX(-50%) translateY(0); }
+    .toast-icon { font-size:1.2rem; }
+    @media(max-width:600px){ .concept-grid{grid-template-columns:1fr 1fr} .flow-diagram{flex-direction:column} .flow-arrow{transform:rotate(90deg);text-align:center} .multi-ponds{gap:1rem} }
+  </style>
+</head>
+<body>
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+<div class="toast" id="toast"><span class="toast-icon">✅</span><span id="toastText">操作完成</span></div>
+<div class="celebration" id="celebration"></div>
+
+<!-- Hero -->
+<div class="hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-lobster">🦞</div>
+  <h1>小龙虾养成记</h1>
+  <p>用养龙虾的智慧，学会 OpenClaw Agent 管理<br><small>8 关卡 · 交互式学习 · 从入门到精通</small></p>
+  <button class="btn-start" onclick="startJourney()">🐾 开始养成之旅</button>
+</div>
+
+<!-- Gates Container -->
+<div class="gates" id="gates">
+
+  <!-- Gate 1: Gateway是什么 -->
+  <div class="gate" id="gate1">
+    <div class="gate-header">
+      <div class="gate-num">1</div>
+      <div><div class="gate-title">🏪 买虾苗</div><div class="gate-subtitle">Gateway 是什么？</div></div>
+    </div>
+    <div class="gate-content">
+      <p>养殖龙虾的第一步，是买虾苗。<strong>OpenClaw 的 Gateway</strong> 就是这袋"虾苗"——它是整个系统的核心，没有它，后面一切都不存在。</p>
+      <div class="concept-grid">
+        <div class="concept-card"><div class="concept-icon">🏪</div><div class="concept-name">Gateway</div><div class="concept-desc">OpenClaw 的核心服务，像养殖基地的总控室</div></div>
+        <div class="concept-card"><div class="concept-icon">🌐</div><div class="concept-name">7×24 运行</div><div class="concept-desc">像永不休息的管家，时刻待命</div></div>
+        <div class="concept-card"><div class="concept-icon">📡</div><div class="concept-name">API 接口</div><div class="concept-desc">所有 Agent 通过它通信协作</div></div>
+      </div>
+      <div class="terminal">
+        <div class="terminal-bar"><div class="term-dot dot-red"></div><div class="term-dot dot-yellow"></div><div class="term-dot dot-green"></div></div>
+        <div class="term-body" id="term1"></div>
+      </div>
+      <div class="gate-nav">
+        <button class="btn-nav" disabled>← 上一页</button>
+        <button class="btn-complete" onclick="completeGate(1)">✅ 我学会了 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gate 2: 安装Gateway -->
+  <div class="gate" id="gate2">
+    <div class="gate-header">
+      <div class="gate-num">2</div>
+      <div><div class="gate-title">🏗️ 挖池塘</div><div class="gate-subtitle">安装 Gateway</div></div>
+    </div>
+    <div class="gate-content">
+      <p>虾苗需要池塘才能生长。来，挖一口属于你自己的池塘！</p>
+      <div class="terminal">
+        <div class="terminal-bar"><div class="term-dot dot-red"></div><div class="term-dot dot-yellow"></div><div class="term-dot dot-green"></div><span style="color:#7f8c8d;margin-left:0.5rem;font-size:0.8rem;">Terminal</span></div>
+        <div class="term-body" id="term2"></div>
+      </div>
+      <button class="btn-complete" onclick="runInstall()" style="margin-top:1rem">🚀 运行安装命令</button>
+      <div class="gate-nav">
+        <button class="btn-nav" onclick="goGate(1)">← 上一页</button>
+        <button class="btn-complete" onclick="completeGate(2)">✅ 安装完成 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gate 3: 配置Agent -->
+  <div class="gate" id="gate3">
+    <div class="gate-header">
+      <div class="gate-num">3</div>
+      <div><div class="gate-title">🦐 放虾苗</div><div class="gate-subtitle">配置第一个 Agent</div></div>
+    </div>
+    <div class="gate-content">
+      <p>池塘挖好了！现在放入第一批虾苗——你的第一个 <strong>Agent</strong>。</p>
+      <div class="concept-grid">
+        <div class="concept-card"><div class="concept-icon">🤖</div><div class="concept-name">Agent</div><div class="concept-desc">一个 AI 角色，有自己的名字和职责</div></div>
+        <div class="concept-card"><div class="concept-icon">🎯</div><div class="concept-name">Model</div><div class="concept-desc">Agent 的大脑，决定它的思考能力</div></div>
+        <div class="concept-card"><div class="concept-icon">🧠</div><div class="concept-name">Memory</div><div class="concept-desc">Agent 的记忆，跨 session 保持上下文</div></div>
+      </div>
+      <p style="margin:1rem 0 0.5rem">在 <code>openclaw.json</code> 中配置 Agent：</p>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        <code><span class="comment">// openclaw.json</span>
+{
+  <span class="key">"agents"</span>: {
+    <span class="key">"list"</span>: [
+      {
+        <span class="key">"id"</span>: <span class="string">"assistant"</span>,
+        <span class="key">"model"</span>: <span class="string">"minimax/MiniMax-M2.7"</span>,
+        <span class="key">"name"</span>: <span class="string">"小助手"</span>
+      }
+    ]
+  }
+}</code>
+      </div>
+      <div class="gate-nav">
+        <button class="btn-nav" onclick="goGate(2)">← 上一页</button>
+        <button class="btn-complete" onclick="completeGate(3)">✅ 虾苗入池 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gate 4: 发消息 -->
+  <div class="gate" id="gate4">
+    <div class="gate-header">
+      <div class="gate-num">4</div>
+      <div><div class="gate-title">🍞 喂虾</div><div class="gate-subtitle">发第一条消息</div></div>
+    </div>
+    <div class="gate-content">
+      <p>虾苗入池了！现在给它们喂点饲料——发送你的第一条指令。</p>
+      <div class="pond-container">
+        <div class="pond" id="pond4">
+          <div class="wave"></div>
+          <div class="lobster-in-pond" id="lobster4">🦞</div>
+        </div>
+      </div>
+      <div class="terminal">
+        <div class="terminal-bar"><div class="term-dot dot-red"></div><div class="term-dot dot-yellow"></div><div class="term-dot dot-green"></div></div>
+        <div class="term-body" id="term4"></div>
+      </div>
+      <button class="btn-complete" onclick="feedLobsters()" style="margin-top:1rem">🍞 投喂虾苗</button>
+      <div class="gate-nav">
+        <button class="btn-nav" onclick="goGate(3)">← 上一页</button>
+        <button class="btn-complete" onclick="completeGate(4)">✅ 喂食成功 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gate 5: Skill -->
+  <div class="gate" id="gate5">
+    <div class="gate-header">
+      <div class="gate-num">5</div>
+      <div><div class="gate-title">⚙️ 增氧机</div><div class="gate-subtitle">安装 Skill 扩展能力</div></div>
+    </div>
+    <div class="gate-content">
+      <p>龙虾需要氧气才能存活。<strong>Skill</strong> 就是池塘的增氧机，给 Agent 扩展超能力！</p>
+      <div class="skill-install">
+        <div class="skill-item" id="skill1">
+          <div class="skill-item-icon">🔍</div>
+          <div class="skill-item-info">
+            <div class="skill-item-name">网页搜索 Skill</div>
+            <div class="skill-item-status" id="skill1Status">待安装</div>
+            <div class="skill-progress"><div class="skill-progress-bar" id="skill1Bar"></div></div>
+          </div>
+        </div>
+        <div class="skill-item" id="skill2">
+          <div class="skill-item-icon">📊</div>
+          <div class="skill-item-info">
+            <div class="skill-item-name">数据分析 Skill</div>
+            <div class="skill-item-status" id="skill2Status">待安装</div>
+            <div class="skill-progress"><div class="skill-progress-bar" id="skill2Bar"></div></div>
+          </div>
+        </div>
+        <div class="skill-item" id="skill3">
+          <div class="skill-item-icon">🤖</div>
+          <div class="skill-item-info">
+            <div class="skill-item-name">代码执行 Skill</div>
+            <div class="skill-item-status" id="skill3Status">待安装</div>
+            <div class="skill-progress"><div class="skill-progress-bar" id="skill3Bar"></div></div>
+          </div>
+        </div>
+      </div>
+      <button class="btn-complete" onclick="installSkills()" style="margin-top:1rem">⚙️ 一键安装增氧机</button>
+      <div class="gate-nav">
+        <button class="btn-nav" onclick="goGate(4)">← 上一页</button>
+        <button class="btn-complete" onclick="completeGate(5)">✅ 装备升级 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gate 6: Cron -->
+  <div class="gate" id="gate6">
+    <div class="gate-header">
+      <div class="gate-num">6</div>
+      <div><div class="gate-title">⏰ 自动投喂机</div><div class="gate-subtitle">设置定时任务 Cron</div></div>
+    </div>
+    <div class="gate-content">
+      <p>不想每天手动喂虾？设置<strong>自动投喂机</strong>——Cron 定时任务，让龙虾每天自动吃饭！</p>
+      <table class="compare-table">
+        <tr><th>传统方式</th><th>Cron 定时任务</th></tr>
+        <tr><td>每天手动搜集新闻</td><td>每天 8 点自动搜集</td></tr>
+        <tr><td>记着发日报</td><td>定时自动发送到飞书</td></tr>
+        <tr><td>容易忘记</td><td>永不遗漏</td></tr>
+      </table>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        <code><span class="comment"># 每天早上 8 点自动喂虾（发简报）</span>
+<span class="cmd">openclaw cron add \</span>
+<span class="cmd">  --name "每日简报" \</span>
+<span class="cmd">  --schedule "0 8 * * *" \</span>
+<span class="cmd">  --task "搜集新闻，生成摘要" \</span>
+<span class="cmd">  --channel feishu</span></code>
+      </div>
+      <div class="gate-nav">
+        <button class="btn-nav" onclick="goGate(5)">← 上一页</button>
+        <button class="btn-complete" onclick="completeGate(6)">✅ 定时设置完成 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gate 7: Multi-Agent -->
+  <div class="gate" id="gate7">
+    <div class="gate-header">
+      <div class="gate-num">7</div>
+      <div><div class="gate-title">🌐 多口池塘联动</div><div class="gate-subtitle">多 Agent 协作</div></div>
+    </div>
+    <div class="gate-content">
+      <p>养大了想扩养？多口池塘一起养！<strong>多 Agent 协作</strong>——多个角色分工合作，就像一个公司有不同部门。</p>
+      <div class="multi-ponds">
+        <div class="mini-pond">🦐<br><small style="font-size:0.7rem">助手Agent</small></div>
+        <div class="mini-pond">🦞<br><small style="font-size:0.7rem">研究员Agent</small></div>
+        <div class="mini-pond">🦀<br><small style="font-size:0.7rem">执行者Agent</small></div>
+      </div>
+      <div class="flow-diagram">
+        <div class="flow-node"><div class="flow-node-icon">👤</div><div class="flow-node-label">你</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node"><div class="flow-node-icon">🦐</div><div class="flow-node-label">助手</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node"><div class="flow-node-icon">🦞</div><div class="flow-node-label">研究员</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node"><div class="flow-node-icon">🦀</div><div class="flow-node-label">执行者</div></div>
+      </div>
+      <p style="margin-top:1rem; color:var(--muted)">就像我们定制的「三省六部」系统：皇上→太子→中书省→门下省→尚书省→各部执行</p>
+      <div class="gate-nav">
+        <button class="btn-nav" onclick="goGate(6)">← 上一页</button>
+        <button class="btn-complete" onclick="completeGate(7)">✅ 协作打通 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gate 8: Final -->
+  <div class="gate" id="gate8">
+    <div class="gate-header">
+      <div class="gate-num">8</div>
+      <div><div class="gate-title">🎓 收虾节</div><div class="gate-subtitle">龙虾大师认证</div></div>
+    </div>
+    <div class="gate-content">
+      <p>恭喜你！完成了全部 8 个关卡，现在是正式的"龙虾大师"了！</p>
+      <div class="certificate">
+        <h2>龙虾大师证书</h2>
+        <div class="certificate-name">龙虾养殖高手</div>
+        <p>OpenClaw Agent 管理 · 从入门到精通</p>
+        <p style="margin-top:1rem; font-size:0.9rem">你已掌握：Gateway · Agent · Skill · Cron · 多Agent协作</p>
+      </div>
+      <div class="concept-grid" style="margin-top:1rem">
+        <div class="concept-card"><div class="concept-icon">📚</div><div class="concept-name">继续深入</div><div class="concept-desc">docs.openclaw.ai</div></div>
+        <div class="concept-card"><div class="concept-icon">🛠️</div><div class="concept-name">安装技能</div><div class="concept-desc">clawhub.ai</div></div>
+        <div class="concept-card"><div class="concept-icon">💬</div><div class="concept-name">加入社区</div><div class="concept-desc">discord.com/invite/clawd</div></div>
+      </div>
+      <div class="gate-nav">
+        <button class="btn-nav" onclick="goGate(7)">← 上一页</button>
+        <button class="btn-complete" onclick="completeAll()" style="background:linear-gradient(135deg,var(--accent),#e67e22)">🏆 获得证书！</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let currentGate = 0;
+const totalGates = 8;
+
+function startJourney() {
+  document.getElementById('hero').style.display = 'none';
+  document.getElementById('gates').classList.add('active');
+  goGate(1);
+  animateTerm1();
+}
+
+function goGate(n) {
+  currentGate = n;
+  for (let i = 1; i <= totalGates; i++) {
+    const gate = document.getElementById('gate' + i);
+    gate.classList.remove('active');
+    if (i < n) gate.classList.add('locked');
+  }
+  const target = document.getElementById('gate' + n);
+  target.classList.add('active');
+  target.classList.remove('locked');
+  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  updateProgress();
+}
+
+function completeGate(n) {
+  showToast('第 ' + n + ' 关完成！🎉');
+  if (n < totalGates) {
+    setTimeout(() => goGate(n + 1), 800);
+  } else {
+    setTimeout(() => goGate(n), 800);
+  }
+}
+
+function updateProgress() {
+  const pct = ((currentGate) / totalGates) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function showToast(text) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastText').textContent = text;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function animateTerm1() {
+  const el = document.getElementById('term1');
+  const lines = [
+    { cls: 'term-prompt', text: '$ npm install -g openclaw', delay: 0 },
+    { cls: 'term-output', text: '✓ openclaw@2026.3.24 installed', delay: 800 },
+    { cls: 'term-prompt', text: '$ openclaw gateway start', delay: 1400 },
+    { cls: 'term-output', text: '✓ Gateway running on :18789', delay: 2000 },
+    { cls: 'term-output', text: '✓ Agent assistant ready', delay: 2500 },
+    { cls: 'term-output', text: '🏪 虾苗（Gateway）已就位！', delay: 3200 },
+  ];
+  lines.forEach(l => {
+    setTimeout(() => {
+      const div = document.createElement('div');
+      div.className = 'term-line';
+      div.innerHTML = l.cls === 'term-prompt' ? '<span class="term-prompt">❯</span> ' + l.text : l.text;
+      el.appendChild(div);
+    }, l.delay);
+  });
+}
+
+function runInstall() {
+  const el = document.getElementById('term2');
+  el.innerHTML = '';
+  const lines = [
+    { cls: 'term-prompt', text: '$ openclaw gateway install', delay: 0 },
+    { cls: 'term-output', text: '✓ Creating pond directory...', delay: 500 },
+    { cls: 'term-output', text: '✓ Downloading Gateway binary...', delay: 1000 },
+    { cls: 'term-output', text: '✓ Installing dependencies...', delay: 1500 },
+    { cls: 'term-output', text: '✓ Writing config to ~/.openclaw/', delay: 2000 },
+    { cls: 'term-output', text: '✓ Starting Gateway daemon...', delay: 2500 },
+    { cls: 'term-output', text: '🎉 池塘挖好啦！Gateway 已运行', delay: 3000 },
+  ];
+  lines.forEach(l => {
+    setTimeout(() => {
+      const div = document.createElement('div');
+      div.className = 'term-line';
+      div.innerHTML = l.cls === 'term-prompt' ? '<span class="term-prompt">❯</span> ' + l.text : l.text;
+      el.appendChild(div);
+    }, l.delay);
+  });
+  showToast('安装成功！🎉');
+}
+
+function feedLobsters() {
+  const pond = document.getElementById('pond4');
+  for (let i = 0; i < 5; i++) {
+    setTimeout(() => {
+      const p = document.createElement('div');
+      p.className = 'food-particle';
+      p.style.left = (30 + Math.random() * 40) + '%';
+      p.style.animationDelay = (i * 0.2) + 's';
+      pond.appendChild(p);
+      setTimeout(() => p.remove(), 2000);
+    }, i * 200);
+  }
+  const el = document.getElementById('term4');
+  el.innerHTML = '';
+  const lines = [
+    { cls: 'term-prompt', text: '$ openclaw send "今天天气如何？"', delay: 0 },
+    { cls: 'term-output', text: '→ Agent 已接收指令...', delay: 600 },
+    { cls: 'term-output', text: '→ 分析问题中...', delay: 1200 },
+    { cls: 'term-output', text: '→ 查询天气数据...', delay: 1800 },
+    { cls: 'term-output', text: '📢 回答：今天晴天，28度，适合出门！', delay: 2400 },
+    { cls: 'term-output', text: '🦞 虾苗吃得很欢！', delay: 3000 },
+  ];
+  lines.forEach(l => {
+    setTimeout(() => {
+      const div = document.createElement('div');
+      div.className = 'term-line';
+      div.innerHTML = l.cls === 'term-prompt' ? '<span class="term-prompt">❯</span> ' + l.text : l.text;
+      el.appendChild(div);
+    }, l.delay);
+  });
+  showToast('喂食成功！🍞');
+}
+
+function installSkills() {
+  const skills = [
+    { id: 1, name: '网页搜索', delay: 0 },
+    { id: 2, name: '数据分析', delay: 800 },
+    { id: 3, name: '代码执行', delay: 1600 },
+  ];
+  skills.forEach(s => {
+    setTimeout(() => {
+      document.getElementById('skill' + s.id + 'Status').textContent = '安装中...';
+      document.getElementById('skill' + s.id + 'Bar').style.width = '30%';
+      setTimeout(() => {
+        document.getElementById('skill' + s.id + 'Bar').style.width = '100%';
+        document.getElementById('skill' + s.id + 'Status').textContent = '✓ 已安装';
+      }, 800);
+    }, s.delay);
+  });
+  setTimeout(() => showToast('所有增氧机安装完成！⚙️'), 3000);
+}
+
+function completeAll() {
+  const c = document.getElementById('celebration');
+  c.style.display = 'block';
+  const colors = ['#e74c3c','#f39c12','#3498db','#27ae60','#9b59b6','#e67e22'];
+  for (let i = 0; i < 60; i++) {
+    const conf = document.createElement('div');
+    conf.className = 'confetti';
+    conf.style.left = Math.random() * 100 + '%';
+    conf.style.background = colors[Math.floor(Math.random() * colors.length)];
+    conf.style.animationDelay = Math.random() * 2 + 's';
+    conf.style.transform = 'rotate(' + Math.random() * 360 + 'deg)';
+    c.appendChild(conf);
+  }
+  showToast('恭喜成为龙虾大师！🦞🏆');
+  setTimeout(() => {
+    c.innerHTML = '';
+    c.style.display = 'none';
+  }, 4000);
+}
+
+function copyCode(btn) {
+  const code = btn.parentElement.querySelector('code').innerText;
+  navigator.clipboard.writeText(code).then(() => {
+    btn.textContent = '已复制!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '复制'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+</script>
+</body>
+</html>
